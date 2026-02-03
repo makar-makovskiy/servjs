@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Пользователи</title>
+</head>
+<body>
+    <input type="text" id="nameInput" placeholder="Введите имя">
+    <button onclick="addUser()">Добавить</button>
+    
+
+    <ul id="usersList"></ul>
+
+    <script>
+
+        const server = 'http://localhost:3000';
+        
+        window.onload = loadUsers;
+
+        async function loadUsers() {
+            const response = await fetch(server + '/users');
+            const users = await response.json();
+            
+            const list = document.getElementById('usersList');
+            list.innerHTML = '';
+            
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.innerHTML = user.name + ' <button onclick="deleteUser(' + user.id + ')">X</button>';
+                list.appendChild(li);
+            });
+        }
+        
+        async function addUser() {
+            const input = document.getElementById('nameInput');
+            const name = input.value;
+            
+            if (!name) return;
+            
+            await fetch(server + '/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name })
+            });
+            
+            input.value = '';
+            loadUsers();
+        }
+        
+        async function deleteUser(id) {
+
+            await fetch(server + '/users/' + id, {
+                method: 'DELETE'
+            });
+            
+            // Обновляем список
+            loadUsers();
+        }
+    </script>
+</body>
+</html>
