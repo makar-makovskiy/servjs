@@ -12,12 +12,10 @@
 
     <script>
 
-        const server = 'http://localhost:3000';
-        
         window.onload = loadUsers;
 
         async function loadUsers() {
-            const response = await fetch(server + '/users');
+            const response = await fetch('/users');
             const users = await response.json();
             
             const list = document.getElementById('usersList');
@@ -36,7 +34,7 @@
             
             if (!name) return;
             
-            await fetch(server + '/users', {
+            await fetch('/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name })
@@ -48,7 +46,7 @@
         
         async function deleteUser(id) {
 
-            await fetch(server + '/users/' + id, {
+            await fetch('/users/' + id, {
                 method: 'DELETE'
             });
             

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
@@ -7,7 +10,11 @@ const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('../client'));
+
+const clientDir = path.join(__dirname, '..', 'client');
+if (fs.existsSync(clientDir)) {
+  app.use(express.static(clientDir));
+}
 
 app.post('/users', async (req, res) => {
   try {
@@ -52,7 +59,7 @@ app.delete('/users/:id', async (req, res) => {
   }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Сервер запущен: http://localhost:3000`);
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Сервер запущен: http://localhost:${PORT}`);
 });

@@ -1,0 +1,7 @@
+{
+  "name": "servjs",
+  "private": true,
+  "scripts": {
+    "start": "node serv/server/server.js"
+  }
+}
